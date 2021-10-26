@@ -14,3 +14,5 @@ In cadrul lui vom dezvolta partea de back-end a unui purificator smart ce are ur
 
 Implementarea proiectului se va realiza in Java.
 
+Link catre documentul de analiza: https://docs.google.com/document/d/1zegxxW3Ma2Hy8idONQcIOMgB3yz-dOM4IdGJO5W8LvM/edit#
+
