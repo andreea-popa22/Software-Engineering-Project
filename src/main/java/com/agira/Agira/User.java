@@ -13,7 +13,7 @@ public class User {
     @Column(name = "purifier_id", nullable = false)
     private int purifier_id;
 
-    @Column(name = "username", nullable = true)
+    @Column(name = "username", nullable = false)
     private String username;
 
     @Column(name = "password", nullable = false)
