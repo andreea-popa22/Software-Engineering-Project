@@ -1,5 +1,8 @@
 
 package com.agira.Agira;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,17 +11,40 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.net.ssl.HttpsURLConnection;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Scanner;
 
 @SpringBootApplication
 @Controller
 public class DemoApplication {
     public static void main(String[] args) {
+
         SpringApplication.run(DemoApplication.class, args);
+        try {
+            URL url = new URL(SensitiveInformation.apiURL);
+
+            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.connect();
+            int responseCode = conn.getResponseCode();
+
+            if (responseCode != 200) {
+                throw new RuntimeException("HttpResponseCode: " + responseCode);
+            }
+            else {
+                String informationString = Service.ReadData(url);
+                JSONObject dataObject = Service.StringToJson(informationString);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Autowired
@@ -32,11 +58,9 @@ public class DemoApplication {
     @GetMapping("/hello")
     public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
         try {
-            String jdbcURL = "jdbc:mysql://35.224.49.192:3306/IPdatabase?useSSL=false";
-            String username = "root";
-            String password = "123456";
-
-            System.out.println("yess");
+            String jdbcURL = SensitiveInformation.databaseJDBC;
+            String username = SensitiveInformation.databaseUser;
+            String password = SensitiveInformation.databasePassword;
 
             Connection connection = DriverManager.getConnection(jdbcURL, username, password);
 
@@ -68,7 +92,6 @@ public class DemoApplication {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
-
         userRepo.save(user);
 
         return "register_succ";
@@ -81,8 +104,6 @@ public class DemoApplication {
 
         return "users";
     }
-
-
 
 }
 
