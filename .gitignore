@@ -33,3 +33,4 @@ build/
 .vscode/
 
 src/main/java/com/agira/Agira/SensitiveInformation.java
+src/main/java/com/agira/Agira/test

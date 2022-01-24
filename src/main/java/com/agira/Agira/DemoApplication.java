@@ -1,8 +1,9 @@
 
 package com.agira.Agira;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+//import org.json.simple.JSONObject;
+import org.springframework.boot.configurationprocessor.json.*;
+//import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,18 +13,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.net.ssl.HttpsURLConnection;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import java.util.Scanner;
 
 @SpringBootApplication
 @Controller
 public class DemoApplication {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
         SpringApplication.run(DemoApplication.class, args);
         try {
@@ -38,13 +40,17 @@ public class DemoApplication {
                 throw new RuntimeException("HttpResponseCode: " + responseCode);
             }
             else {
-                String informationString = Service.ReadData(url);
-                JSONObject dataObject = Service.StringToJson(informationString);
+                String informationString = ApiService.ReadData(url);
+                JSONObject dataObject = new JSONObject(informationString);
+                ObjectMapper mapper = new ObjectMapper();
+                System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dataObject));
+                System.out.println(ApiService.GetCO("bucharest"));
             }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     @Autowired
@@ -64,11 +70,11 @@ public class DemoApplication {
 
             Connection connection = DriverManager.getConnection(jdbcURL, username, password);
 
-            String sql = "INSERT INTO MESSAGE (message_text) VALUES ('ABC')";
+            //String sql = "INSERT INTO MESSAGE (message_text) VALUES ('ABC')";
 
-            Statement statement = connection.createStatement();
+            //Statement statement = connection.createStatement();
 
-            int rows = statement.executeUpdate(sql);
+            //int rows = statement.executeUpdate(sql);
         }
         catch (Exception ex){
             System.out.println(ex.getMessage());
