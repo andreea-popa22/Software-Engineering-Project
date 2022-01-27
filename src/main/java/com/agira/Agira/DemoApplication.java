@@ -1,5 +1,7 @@
 
 package com.agira.Agira;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import org.json.simple.JSONObject;
 import org.springframework.boot.configurationprocessor.json.*;
@@ -43,6 +45,7 @@ public class DemoApplication {
                 String informationString = ApiService.ReadData(url);
                 JSONObject dataObject = new JSONObject(informationString);
                 ObjectMapper mapper = new ObjectMapper();
+                mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
                 System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dataObject));
                 System.out.println(ApiService.GetCO("bucharest"));
             }
@@ -55,6 +58,9 @@ public class DemoApplication {
 
     @Autowired
     private UserRepository userRepo;
+
+    @Autowired
+    private PurifierRepository purifierRepository;
 
     @GetMapping("")
     public String viewHomePage() {
@@ -109,6 +115,16 @@ public class DemoApplication {
         model.addAttribute("listUsers", listUsers);
 
         return "users";
+    }
+
+    @PostMapping("/addPurifier")
+    public String addPurifier() {
+        Purifier purifier = new Purifier();
+        purifier.setIs_on(true);
+
+        purifierRepository.save(purifier);
+
+        return null;
     }
 
 }
