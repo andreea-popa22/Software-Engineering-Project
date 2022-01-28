@@ -19,7 +19,7 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "date_of_birth", nullable = false)
+    @Column(name = "date_of_birth", nullable = true)
     private Date date_of_birth;
 
     @Column(name = "gender", nullable = true)

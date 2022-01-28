@@ -99,7 +99,8 @@ public class DemoApplication {
 
 
     @PostMapping("/process_register")
-    public String processRegister(User user) {
+    public String processRegister(@RequestBody User user) {
+        System.out.println(user.getUsername());
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
@@ -118,13 +119,11 @@ public class DemoApplication {
     }
 
     @PostMapping("/addPurifier")
-    public String addPurifier() {
-        Purifier purifier = new Purifier();
-        purifier.setIs_on(true);
+    public String addPurifier(@RequestBody Purifier purifier) {
 
         purifierRepository.save(purifier);
 
-        return null;
+        return "register_succ";
     }
 
 }
