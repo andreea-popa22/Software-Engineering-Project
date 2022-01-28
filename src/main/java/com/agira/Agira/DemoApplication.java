@@ -126,6 +126,35 @@ public class DemoApplication {
         return "register_succ";
     }
 
+
+    @PostMapping("/process_edit_profile")
+    public String processEditProfile(User user) {
+        // System.out.println(user.getUsername());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+
+        User user1 = userRepo.findByUsername(user.getUsername());
+        user1.setPassword(encodedPassword);
+        user1.setUsername(user.getUsername());
+        user1.setDate_of_birth(user.getDate_of_birth());
+        user1.setAfflictions(user.getAfflictions());
+        userRepo.save(user1);
+
+        return "profile";
+    }
+
+    @GetMapping("/profile")
+    public String viewProfile() {
+
+        return "profile";
+    }
+
+    @GetMapping("/edit_profile")
+    public String editProfile(Model model) {
+        model.addAttribute("user", new User());
+        return "editProfile";
+    }
+
 }
 
 // http://localhost:8080/hello

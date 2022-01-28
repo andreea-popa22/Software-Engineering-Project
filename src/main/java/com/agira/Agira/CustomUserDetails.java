@@ -28,6 +28,19 @@ public class CustomUserDetails implements UserDetails {
         return user.getUsername();
     }
 
+    public String getAfflictions() {
+        return user.getAfflictions();
+    }
+
+    public String getDate_of_birth() {
+        return user.getDate_of_birth().toString();
+    }
+
+    public String getGender() {
+        return user.getGender();
+    }
+
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
