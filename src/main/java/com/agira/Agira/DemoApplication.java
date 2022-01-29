@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
@@ -26,6 +27,7 @@ import java.util.List;
 
 @SpringBootApplication
 @Controller
+@EnableSwagger2
 public class DemoApplication {
     public static void main(String[] args) throws SQLException {
 
@@ -128,19 +130,21 @@ public class DemoApplication {
 
 
     @PostMapping("/process_edit_profile")
-    public String processEditProfile(User user) {
+    public String processEditProfile(@RequestBody User user) {
         // System.out.println(user.getUsername());
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-
         User user1 = userRepo.findByUsername(user.getUsername());
-        user1.setPassword(encodedPassword);
+        if(user.getPassword() != null) {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String encodedPassword = passwordEncoder.encode(user.getPassword());
+            user1.setPassword(encodedPassword);
+        }
+
         user1.setUsername(user.getUsername());
         user1.setDate_of_birth(user.getDate_of_birth());
         user1.setAfflictions(user.getAfflictions());
         userRepo.save(user1);
 
-        return "profile";
+        return "register_succ";
     }
 
     @GetMapping("/profile")
