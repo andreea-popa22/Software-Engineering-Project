@@ -9,6 +9,8 @@ import org.springframework.boot.configurationprocessor.json.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -131,8 +133,10 @@ public class DemoApplication {
 
     @PostMapping("/process_edit_profile")
     public String processEditProfile(@RequestBody User user) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
         // System.out.println(user.getUsername());
-        User user1 = userRepo.findByUsername(user.getUsername());
+        User user1 = userRepo.findByUsername(currentPrincipalName);
         if(user.getPassword() != null) {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String encodedPassword = passwordEncoder.encode(user.getPassword());
@@ -149,7 +153,9 @@ public class DemoApplication {
 
     @GetMapping("/profile")
     public String viewProfile() {
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        System.out.println(currentPrincipalName);
         return "profile";
     }
 
