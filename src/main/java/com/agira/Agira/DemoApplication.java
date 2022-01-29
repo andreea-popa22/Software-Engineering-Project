@@ -21,10 +21,8 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.time.LocalTime;
 import java.util.List;
 
 @SpringBootApplication
@@ -71,6 +69,9 @@ public class DemoApplication {
 
     @Autowired
     private MessageRepository messageRepository;
+
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
     @GetMapping("")
     public String viewHomePage() {
@@ -130,6 +131,7 @@ public class DemoApplication {
 
     @PostMapping("/addPurifier")
     public String addPurifier(@RequestBody Purifier purifier) {
+        purifier.setSchedule_id(1);
 
         purifierRepository.save(purifier);
 
@@ -187,17 +189,141 @@ public class DemoApplication {
         return "register_succ";
     }
 
+    @ResponseBody
     @GetMapping("/getPurifierState")
-    public String getPurifierState(Model model){
+    public Purifier getPurifierState(){
+        return getPurifier();
+    }
+
+    @ResponseBody
+    @PutMapping("/triggerAlarmAndMessage")
+    public String triggerAlarmAndMessage(){
+        User user = getUser();
+        int limit = 30;
+        Purifier purifier = getPurifier();
+        if(user.getAfflictions().contains("astm")){
+            limit = 40;
+        }
+        purifier.setAudio_id(2);
+        purifier.setMessage_id(2);
+        purifierRepository.save(purifier);
+        return "Trigger succesful!";
+    }
+
+    public User getUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
-        User user = userRepo.findByUsername(currentPrincipalName);
+        return userRepo.findByUsername(currentPrincipalName);
+    }
+
+    public Purifier getPurifier(){
+        User user = getUser();
+        Boolean is_on;
         Purifier purifier = purifierRepository.findById(user.getPurifier_id());
-        model.addAttribute("purifier", purifier);
-        return "purifier";
+        is_on = checkSchedule(purifier);
+        System.out.println(is_on);
+        if(is_on){
+            return purifier;
+        }
+        else {
+            return null;
+        }
+    }
+
+    public Purifier getPurifierNoSchedule(){
+        User user = getUser();
+        Boolean is_on;
+        return purifierRepository.findById(user.getPurifier_id());
+
+    }
+    @ResponseBody
+    @DeleteMapping("/deletePurifiers")
+    public String deletePurifiers(){
+        purifierRepository.deleteAll();
+        return "delete all successful!";
+    }
+
+    @PostMapping("/addSchedule")
+    public String addSchedule(@RequestBody Schedule schedule){
+        scheduleRepository.save(schedule);
+
+        return "register_succ";
+    }
+    @ResponseBody
+    @PutMapping("/pickOffSchedule")
+    public String pickOffSchedule(){
+        pickSchedule(2);
+        return "Your purifier is off!";
+    }
+
+    @ResponseBody
+    @PutMapping("/pickOnSchedule")
+    public String pickOnSchedule(){
+        pickSchedule(1);
+        return "Your purifier is on!";
+    }
+
+    @ResponseBody
+    @PutMapping("/pickDaySchedule")
+    public String pickDaySchedule(){
+        pickSchedule(4);
+        return "Your purifier is on day schedule (7:00 - 19:00)!";
+    }
+
+    @ResponseBody
+    @PutMapping("/pickNightSchedule")
+    public String pickNightSchedule(){
+        pickSchedule(3);
+        return "Your purifier is on night schedule (19:00 - 7:00)!";
+    }
+
+    @ResponseBody
+    @PutMapping("/editPurifier")
+    public String editPurifier(@RequestBody Purifier purifier){
+        Purifier purifier2 = getPurifier();
+        if(purifier.getLocation_name() != null){
+            purifier2.setLocation_name(purifier.getLocation_name());
+        }
+        purifierRepository.save(purifier2);
+        return "edit Purifier success!";
+    }
+
+    public Boolean checkSchedule(Purifier purifier){
+        boolean is_on;
+        Schedule schedule = scheduleRepository.findById(purifier.getSchedule_id());
+        if(schedule == null){
+            return false;
+        }
+        Time time = Time.valueOf(LocalTime.now());
+        Time startTime = schedule.getStart_time();
+        Time endTime = schedule.getEnd_time();
+        System.out.println(time);
+        System.out.println(schedule.getStart_time());
+        System.out.println(schedule.getEnd_time());
+        System.out.println(time.compareTo(schedule.getStart_time()) > 0);
+        System.out.println(time.compareTo(schedule.getEnd_time()) < 0);
+        if(startTime.after(endTime)){
+            is_on = time.after(schedule.getStart_time()) || time.before(schedule.getEnd_time());
+        }
+        else {
+            is_on = time.after(schedule.getStart_time()) && time.before(schedule.getEnd_time());
+        }
+        System.out.println("Aici");
+        System.out.println(is_on);
+        purifier.setIs_on(is_on);
+        purifierRepository.save(purifier);
+        return is_on;
+    }
+
+    public void pickSchedule(int id){
+        Purifier purifier = getPurifierNoSchedule();
+        purifier.setSchedule_id(id);
+        purifierRepository.save(purifier);
     }
 
 }
+
+
 
 // http://localhost:8080/hello
             
