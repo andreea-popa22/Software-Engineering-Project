@@ -66,6 +66,12 @@ public class DemoApplication {
     @Autowired
     private PurifierRepository purifierRepository;
 
+    @Autowired
+    private AudioRepository audioRepository;
+
+    @Autowired
+    private MessageRepository messageRepository;
+
     @GetMapping("")
     public String viewHomePage() {
         return "index";
@@ -163,6 +169,32 @@ public class DemoApplication {
     public String editProfile(Model model) {
         model.addAttribute("user", new User());
         return "editProfile";
+    }
+
+    @PostMapping("/addAudio")
+    public String addAudio(@RequestBody Audio audio) {
+
+            audioRepository.save(audio);
+
+            return "register_succ";
+    }
+
+    @PostMapping("/addMessage")
+    public String addMessage(@RequestBody Message message) {
+
+        messageRepository.save(message);
+
+        return "register_succ";
+    }
+
+    @GetMapping("/getPurifierState")
+    public String getPurifierState(Model model){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        User user = userRepo.findByUsername(currentPrincipalName);
+        Purifier purifier = purifierRepository.findById(user.getPurifier_id());
+        model.addAttribute("purifier", purifier);
+        return "purifier";
     }
 
 }

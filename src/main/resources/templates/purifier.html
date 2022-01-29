@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Purifier</title>
+    <div>
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th>Purifier ID</th>
+                <th>Audio ID</th>
+                <th>Message ID</th>
+                <th>Schedule ID</th>
+                <th>Color</th>
+                <th>Location_name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${purifier.purifier_id}">Purifier ID</td>
+                <td th:text="${purifier.audio_id}">Audio ID</td>
+                <td th:text="${purifier.message_id}">Message ID</td>
+                <td th:text="${purifier.schedule_id}">Schedule ID</td>
+                <td th:text="${purifier.hex}">Color</td>
+                <td th:text="${purifier.audio_id}">Location_name</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</head>
+<body>
+
+</body>
+</html>
