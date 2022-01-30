@@ -16,6 +16,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private static final String[] SWAGGER_WHITELIST = {
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+    };
+
     @Autowired
     private DataSource dataSource;
 
@@ -45,23 +52,32 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/users").authenticated()
-                .anyRequest().permitAll()
-                .and()
-                .formLogin()
-                .usernameParameter("username")
-                .defaultSuccessUrl("/users")
-                .permitAll()
-                .and()
-                .logout().logoutSuccessUrl("/").permitAll();
-        http.csrf().disable();
+//        http.authorizeRequests()
+//                .antMatchers("/users").authenticated()
+//                .anyRequest().permitAll()
+//                .and()
+//                .formLogin()
+//                .usernameParameter("username")
+//                .defaultSuccessUrl("/users")
+//                .permitAll()
+//                .and()
+//                .logout().logoutSuccessUrl("/").permitAll();
+//        http.csrf().disable();
 //        http
 //                .authorizeRequests()
 //                .anyRequest().permitAll()
 //                .and()
 //                .formLogin();
+        http
+                .cors()
+                .and()
+                .authorizeRequests()
+                .antMatchers(SWAGGER_WHITELIST).permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic();
     }
+
 
 
 }

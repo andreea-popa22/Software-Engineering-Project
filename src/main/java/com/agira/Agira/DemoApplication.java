@@ -28,6 +28,8 @@ import java.util.List;
 @SpringBootApplication
 @Controller
 @EnableSwagger2
+
+//@SecurityScheme(name = "agira", scheme = "basic", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 public class DemoApplication {
     public static void main(String[] args) throws SQLException {
 
@@ -140,7 +142,7 @@ public class DemoApplication {
 
 
     @PostMapping("/process_edit_profile")
-    public String processEditProfile(@RequestBody User user) {
+    public String processEditProfile(User user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         // System.out.println(user.getUsername());
@@ -156,7 +158,7 @@ public class DemoApplication {
         user1.setAfflictions(user.getAfflictions());
         userRepo.save(user1);
 
-        return "register_succ";
+        return "profile";
     }
 
     @GetMapping("/profile")
@@ -202,6 +204,15 @@ public class DemoApplication {
         int limit = 30;
         Purifier purifier = getPurifier();
         if(user.getAfflictions().contains("astm")){
+            limit = 40;
+        }
+        if(user.getAfflictions().contains("difterie")){
+            limit = 50;
+        }
+        if(user.getAfflictions().contains("alergie")){
+            limit = 60;
+        }
+        if(user.getAfflictions().contains("bronsita")){
             limit = 40;
         }
         purifier.setAudio_id(2);

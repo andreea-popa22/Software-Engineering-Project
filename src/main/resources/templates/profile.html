@@ -32,9 +32,9 @@
             </tr>
             </thead>
             <tbody>
-                <td>[[${#request.userPrincipal.principal.username}]]</td>
-                <td>[[${#request.userPrincipal.principal.date_of_birth}]]</td>
-                <td>[[${#request.userPrincipal.principal.afflictions}]]</td>
+                <td>[[${#request.userPrincipal.principal.getUsername}]]</td>
+                <td>[[${#request.userPrincipal.principal.getDate_of_birth}]]</td>
+                <td>[[${#request.userPrincipal.principal.getAfflictions}]]</td>
             </tr>
             </tbody>
         </table>
