@@ -142,7 +142,7 @@ public class DemoApplication {
 
 
     @PostMapping("/process_edit_profile")
-    public String processEditProfile(User user) {
+    public String processEditProfile(@RequestBody User user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         // System.out.println(user.getUsername());
