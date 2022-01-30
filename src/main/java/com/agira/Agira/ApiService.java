@@ -1,5 +1,7 @@
 package com.agira.Agira;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.boot.configurationprocessor.json.*;
 //import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -10,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class ApiService {
@@ -30,40 +33,39 @@ public class ApiService {
         return "error";
     }
 
-//    public static JSONObject StringToJson(String informationString) {
-//        Object obj = null;
-//        try {
-//            JSONObject dataObject = new JSONObject(informationString);
-//
-//            //ObjectMapper mapper = new ObjectMapper();
-//            //System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dataObject));
-//            return dataObject;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
+    public static JSONObject PrettyPrintJson(String informationString) {
+        Object obj = null;
+        try {
+            JSONObject dataObject = new JSONObject(informationString);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+            System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dataObject));
+            return dataObject;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public static String GetRouteForCity(String city)
     {
         return SensitiveInformation.apiRoute + city + SensitiveInformation.apiToken;
     }
 
-    public static String GetCO(String city){
+    public static String GetParameter(String city, String parameter){
         try {
             URL url = new URL(ApiService.GetRouteForCity(city));
             String city_info = ApiService.ReadData(url);
 
             JSONObject dataObject = new JSONObject(city_info);
 
-           String co = dataObject.getJSONObject("data").getJSONObject("iaqi").getJSONObject("no2").getString("v");
-           System.out.println("CO:  " + co);
-           return co;
+            String value = dataObject.getJSONObject("data").getJSONObject("iaqi").getJSONObject(parameter.toLowerCase()).getString("v");
+            System.out.println(parameter.toUpperCase() + ":  " + value);
+            return value;
         }
         catch (Exception e) {
             e.printStackTrace();
         }
         return "";
     }
-
 }

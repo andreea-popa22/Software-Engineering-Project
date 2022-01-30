@@ -45,11 +45,11 @@ public class DemoApplication {
             }
             else {
                 String informationString = ApiService.ReadData(url);
-                JSONObject dataObject = new JSONObject(informationString);
-                ObjectMapper mapper = new ObjectMapper();
-                mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-                System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dataObject));
-                System.out.println(ApiService.GetCO("bucharest"));
+                ApiService.PrettyPrintJson(informationString);
+                ApiService.GetParameter("london", "co");
+                ApiService.GetParameter("london", "no2");
+                ApiService.GetParameter("london", "o3");
+                ApiService.GetParameter("london", "so2");
             }
         }
         catch (Exception e) {
