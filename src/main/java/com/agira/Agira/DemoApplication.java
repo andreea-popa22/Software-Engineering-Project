@@ -25,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.*;
 import java.time.LocalTime;
+import java.util.Calendar;
 import java.util.List;
 
 @SpringBootApplication
@@ -300,6 +301,41 @@ public class DemoApplication {
         }
         purifierRepository.save(purifier2);
         return "edit Purifier success!";
+    }
+
+    @ResponseBody
+    @PutMapping("/turnOnLightsGame")
+    public String turnOnLightsGame(){
+        //Calendar cal = Calendar.getInstance();
+        String color = Service.colorGame();
+        Purifier purifier = getPurifierNoSchedule();
+        //purifier.setHex(color);
+        //purifierRepository.save(purifier);
+        //System.out.println("Purifier lights game on!" + color);
+        //long startTime = cal.getTimeInMillis();
+        //long currentTime = startTime;
+        for (int i = 0 ; i < 10; i ++)
+        {
+            purifier.setHex(color);
+            purifierRepository.save(purifier);
+            //currentTime = cal.getTimeInMillis();
+            System.out.println("Purifier lights game on!" + color);
+            color = Service.colorGame();
+        }
+        return "Purifier lights game on!" + color;
+//        while (currentTime <= startTime+10000){
+//            color = Service.colorGame();
+//            purifier.setHex(color);
+//            purifierRepository.save(purifier);
+//            currentTime = cal.getTimeInMillis();
+//            System.out.println("Purifier lights game on!" + color);
+//            break;
+//        }
+//
+//
+//        String color = Service.colorGame();
+//        purifier.setHex(color);
+//        purifierRepository.save(purifier);
     }
 
     public Boolean checkSchedule(Purifier purifier){
