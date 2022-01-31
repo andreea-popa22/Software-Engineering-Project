@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import org.json.simple.JSONObject;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.boot.configurationprocessor.json.*;
 //import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,8 @@ import java.util.List;
 @SpringBootApplication
 @Controller
 @EnableSwagger2
-
+@ApiOperation(value = "Update registration detail",
+        authorizations = { @Authorization(value="basicAuth") })
 //@SecurityScheme(name = "agira", scheme = "basic", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 public class DemoApplication {
     public static void main(String[] args) throws SQLException {
