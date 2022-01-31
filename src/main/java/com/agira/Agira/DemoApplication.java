@@ -31,8 +31,8 @@ import java.util.List;
 @SpringBootApplication
 @Controller
 @EnableSwagger2
-@ApiOperation(value = "Update registration detail",
-        authorizations = { @Authorization(value="basicAuth") })
+//@ApiOperation(value = "Update registration detail",
+//        authorizations = { @Authorization(value="basicAuth") })
 //@SecurityScheme(name = "agira", scheme = "basic", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 public class DemoApplication {
     public static void main(String[] args) throws SQLException {
@@ -332,19 +332,12 @@ public class DemoApplication {
         Time time = Time.valueOf(LocalTime.now());
         Time startTime = schedule.getStart_time();
         Time endTime = schedule.getEnd_time();
-        System.out.println(time);
-        System.out.println(schedule.getStart_time());
-        System.out.println(schedule.getEnd_time());
-        System.out.println(time.compareTo(schedule.getStart_time()) > 0);
-        System.out.println(time.compareTo(schedule.getEnd_time()) < 0);
         if(startTime.after(endTime)){
             is_on = time.after(schedule.getStart_time()) || time.before(schedule.getEnd_time());
         }
         else {
             is_on = time.after(schedule.getStart_time()) && time.before(schedule.getEnd_time());
         }
-        System.out.println("Aici");
-        System.out.println(is_on);
         purifier.setIs_on(is_on);
         purifierRepository.save(purifier);
         return is_on;

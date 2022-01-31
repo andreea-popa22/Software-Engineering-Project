@@ -61,49 +61,49 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider());
     }
 
-    private ApiKey apiKey() {
-        ApiKey a = new ApiKey("JWT", "Authorization", "header");
-        System.out.println("api key:");
-        System.out.println(a.getKeyname());
-        return a;
-    }
-    private SecurityContext securityContext() {
-        return SecurityContext.builder().securityReferences(defaultAuth()).build();
-    }
-
-    private List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
-        return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
-    }
-
-    @Bean
-    public Docket api() {
-        List<SecurityScheme> schemeList = new ArrayList<>();
-        schemeList.add(new BasicAuth("basicAuth"));
-
-        return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
-                .securityContexts(Arrays.asList(securityContext()))
-                .securitySchemes(schemeList)
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build();
-    }
-
-    private ApiInfo apiInfo() {
-        return new ApiInfo(
-                "My REST API",
-                "Some custom description of API.",
-                "1.0",
-                "Terms of service",
-                new Contact("Agira", "www.agira.com", "agira@gmail.com"),
-                "License of API",
-                "API license URL",
-                Collections.emptyList());
-    }
+//    private ApiKey apiKey() {
+//        ApiKey a = new ApiKey("JWT", "Authorization", "header");
+//        System.out.println("api key:");
+//        System.out.println(a.getKeyname());
+//        return a;
+//    }
+//    private SecurityContext securityContext() {
+//        return SecurityContext.builder().securityReferences(defaultAuth()).build();
+//    }
+//
+//    private List<SecurityReference> defaultAuth() {
+//        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+//        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+//        authorizationScopes[0] = authorizationScope;
+//        return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
+//    }
+//
+//    @Bean
+//    public Docket api() {
+//        List<SecurityScheme> schemeList = new ArrayList<>();
+//        schemeList.add(new BasicAuth("basicAuth"));
+//
+//        return new Docket(DocumentationType.SWAGGER_2)
+//                .apiInfo(apiInfo())
+//                .securityContexts(Arrays.asList(securityContext()))
+//                .securitySchemes(schemeList)
+//                .select()
+//                .apis(RequestHandlerSelectors.any())
+//                .paths(PathSelectors.any())
+//                .build();
+//    }
+//
+//    private ApiInfo apiInfo() {
+//        return new ApiInfo(
+//                "My REST API",
+//                "Some custom description of API.",
+//                "1.0",
+//                "Terms of service",
+//                new Contact("Agira", "www.agira.com", "agira@gmail.com"),
+//                "License of API",
+//                "API license URL",
+//                Collections.emptyList());
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
