@@ -1,4 +1,4 @@
-package com.agira.Agira;
+package com.agira.Agira.Entities;
 
 import javax.persistence.*;
 

@@ -1,4 +1,4 @@
-package com.agira.Agira;
+package com.agira.Agira.Configs;
 
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +19,7 @@ import org.springframework.messaging.MessagingException;
 
 
 @Configuration
-public class MqttIntegration {
+public class MqttConfig {
 
     @Bean
     public MqttPahoClientFactory mqttClientFactory() {

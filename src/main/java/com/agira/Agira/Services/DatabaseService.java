@@ -1,7 +1,8 @@
-package com.agira.Agira;
+package com.agira.Agira.Services;
+
+import com.agira.Agira.SensitiveInformation;
 
 import java.sql.*;
-import java.util.Locale;
 
 public class DatabaseService {
 

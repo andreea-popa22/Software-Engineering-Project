@@ -1,7 +1,8 @@
-package com.agira.Agira;
+package com.agira.Agira.Services;
 
 import java.util.Collection;
 
+import com.agira.Agira.Entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

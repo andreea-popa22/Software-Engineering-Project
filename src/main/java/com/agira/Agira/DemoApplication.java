@@ -1,14 +1,10 @@
 
 package com.agira.Agira;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.agira.Agira.Entities.*;
 //import org.json.simple.JSONObject;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
+import com.agira.Agira.Repositories.*;
+import com.agira.Agira.Services.Service;
 import org.eclipse.paho.client.mqttv3.*;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.configurationprocessor.json.*;
 //import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -16,19 +12,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.*;
 import java.time.LocalTime;
-import java.util.Calendar;
 import java.util.List;
 
 @SpringBootApplication

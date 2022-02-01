@@ -1,8 +1,8 @@
-package com.agira.Agira;
+package com.agira.Agira.Services;
 
+import com.agira.Agira.SensitiveInformation;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.boot.configurationprocessor.json.*;
 //import org.springframework.boot.configurationprocessor.json.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,9 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 //import org.json.simple.parser.JSONParser;
 //import org.json.simple.parser.ParseException;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class ApiService {
