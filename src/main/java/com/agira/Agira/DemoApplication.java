@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 //import org.json.simple.JSONObject;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
+import org.eclipse.paho.client.mqttv3.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.configurationprocessor.json.*;
 //import org.json.simple.parser.ParseException;
@@ -80,6 +81,9 @@ public class DemoApplication {
 
     @Autowired
     private ScheduleRepository scheduleRepository;
+
+    @Autowired
+    private StatisticsRepository statisticsRepository;
 
 
     @PostMapping("/process_register")
@@ -286,6 +290,52 @@ public class DemoApplication {
         Purifier purifier = getPurifierNoSchedule();
         purifier.setSchedule_id(id);
         purifierRepository.save(purifier);
+    }
+
+    @ResponseBody
+    @GetMapping("/statistics")
+    public String publishTopic() throws MqttException {
+        // get parameters values from Air Quality Api
+        Purifier purifier = getPurifierNoSchedule();
+        String city = purifier.getLocation_name();
+        String co = "CO: " + ApiService.GetParameter(city, "co") + " ;\n";
+        String no2 = "NO2: " + ApiService.GetParameter(city, "no2") + " ;\n";
+        String o3 = "Ozone: " + ApiService.GetParameter(city, "o3") + " ;\n";
+        String so2 = "SO2: " + ApiService.GetParameter(city, "so2") + " ;\n";
+        String msg = co + no2 + o3 + so2;
+
+        // Mqtt connection
+        String broker = "tcp://localhost:1883";
+        String topicName = "mytopic";
+        int qos = 1;
+
+        MqttClient mqttClient = new MqttClient(broker,String.valueOf(System.nanoTime()));
+        MqttConnectOptions connOpts = new MqttConnectOptions();
+        connOpts.setCleanSession(true);
+        connOpts.setKeepAliveInterval(1000);
+
+        MqttMessage message = new MqttMessage(msg.getBytes());
+        message.setQos(qos);
+        message.setRetained(true);
+        MqttTopic topic2 = mqttClient.getTopic(topicName);
+        mqttClient.connect(connOpts);
+        topic2.publish(message);
+
+        // Create statistics object to save in database
+        Statistics statistics = new Statistics();
+        statistics.setCo(co);
+        statistics.setNo2(no2);
+        statistics.setOzone(so2);
+        statistics.setSo2(so2);
+        statistics.setTimestamp(new Time(System.currentTimeMillis()));
+        addStatistics(statistics);
+
+        return msg;
+    }
+
+    public void addStatistics(Statistics statistic) {
+        statistic.setPurifier_id(getPurifierNoSchedule().getPurifier_id());
+        statisticsRepository.save(statistic);
     }
 
 }
