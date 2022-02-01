@@ -2,6 +2,7 @@ package com.agira.Agira.Entities;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "PURIFIER")
@@ -65,6 +66,19 @@ public class Purifier {
 
     public String getHex() {
         return hex;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Purifier purifier = (Purifier) o;
+        return purifier_id == purifier.purifier_id && audio_id == purifier.audio_id && message_id == purifier.message_id && collection_id == purifier.collection_id && is_on == purifier.is_on && schedule_id == purifier.schedule_id && Objects.equals(hex, purifier.hex) && Objects.equals(location_name, purifier.location_name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(purifier_id, audio_id, message_id, collection_id, hex, is_on, location_name, schedule_id);
     }
 
     public void setHex(String hex) {

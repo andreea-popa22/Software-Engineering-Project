@@ -3,6 +3,7 @@ package com.agira.Agira;
 import com.agira.Agira.Entities.*;
 //import org.json.simple.JSONObject;
 import com.agira.Agira.Repositories.*;
+import com.agira.Agira.Services.ApiService;
 import com.agira.Agira.Services.Service;
 import org.eclipse.paho.client.mqttv3.*;
 //import org.json.simple.parser.ParseException;
@@ -77,13 +78,13 @@ public class DemoApplication {
 
 
     @PostMapping("/process_register")
-    public String processRegister(@RequestBody User user) {
+    public User processRegister(@RequestBody User user) {
         System.out.println(user.getUsername());
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         userRepo.save(user);
-        return "Register Successfully!";
+        return user;
     }
 
     @GetMapping("/users")
@@ -170,8 +171,6 @@ public class DemoApplication {
     public User getUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
-        System.out.println(currentPrincipalName + "!!!!!");
-        System.out.println(userRepo.findByUsername(currentPrincipalName));
         return userRepo.findByUsername(currentPrincipalName);
     }
 
@@ -231,14 +230,12 @@ public class DemoApplication {
         return "Your purifier is on night schedule (19:00 - 7:00)!";
     }
 
-    @PutMapping("/editPurifier")
-    public String editPurifier(@RequestBody Purifier purifier){
+    @PutMapping("/editPurifierLocation")
+    public Purifier editPurifierLocation(@RequestParam String location){
         Purifier purifier2 = getPurifier();
-        if(purifier.getLocation_name() != null){
-            purifier2.setLocation_name(purifier.getLocation_name());
-        }
+        purifier2.setLocation_name(location);
         purifierRepository.save(purifier2);
-        return "edit Purifier success!";
+        return purifier2;
     }
 
     @PutMapping("/turnOnLightsGame")
@@ -279,6 +276,7 @@ public class DemoApplication {
         System.out.println("goood");
         Purifier purifier = getPurifierNoSchedule();
         purifier.setSchedule_id(id);
+        checkSchedule(purifier);
         purifierRepository.save(purifier);
     }
 
