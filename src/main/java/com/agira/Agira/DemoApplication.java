@@ -31,7 +31,7 @@ import java.util.Calendar;
 import java.util.List;
 
 @SpringBootApplication
-@Controller
+@RestController
 @EnableSwagger2
 //@ApiOperation(value = "Update registration detail",
 //        authorizations = { @Authorization(value="basicAuth") })
@@ -66,7 +66,6 @@ public class DemoApplication {
 
     }
 
-
     @Autowired
     private UserRepository userRepo;
 
@@ -82,41 +81,6 @@ public class DemoApplication {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
-    @GetMapping("")
-    public String viewHomePage() {
-        return "index";
-    }
-
-    @GetMapping("/hello")
-    public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
-        try {
-            String jdbcURL = SensitiveInformation.databaseJDBC;
-            String username = SensitiveInformation.databaseUser;
-            String password = SensitiveInformation.databasePassword;
-
-            Connection connection = DriverManager.getConnection(jdbcURL, username, password);
-
-            //String sql = "INSERT INTO MESSAGE (message_text) VALUES ('ABC')";
-
-            //Statement statement = connection.createStatement();
-
-            //int rows = statement.executeUpdate(sql);
-        }
-        catch (Exception ex){
-            System.out.println(ex.getMessage());
-        }
-
-        return String.format("Hello %s!", name);
-    }
-
-
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new User());
-
-        return "signup_form";
-    }
-
 
     @PostMapping("/process_register")
     public String processRegister(@RequestBody User user) {
@@ -124,35 +88,26 @@ public class DemoApplication {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-
         userRepo.save(user);
-
-        return "register_succ";
+        return "Register Successfully!";
     }
 
     @GetMapping("/users")
-    public String listUsers(Model model) {
-        List<User> listUsers = userRepo.findAll();
-        model.addAttribute("listUsers", listUsers);
-
-        return "users";
+    public List<User> listUsers() {
+        return userRepo.findAll();
     }
 
     @PostMapping("/addPurifier")
     public String addPurifier(@RequestBody Purifier purifier) {
         purifier.setSchedule_id(1);
-
         purifierRepository.save(purifier);
-
-        return "register_succ";
+        return "Added Purifier Successfully!";
     }
 
-
     @PostMapping("/process_edit_profile")
-    public String processEditProfile(@RequestBody User user) {
+    public User processEditProfile(@RequestBody User user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
-        // System.out.println(user.getUsername());
         User user1 = userRepo.findByUsername(currentPrincipalName);
         if(user.getPassword() != null) {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -170,46 +125,31 @@ public class DemoApplication {
         user1.setAfflictions(user.getAfflictions());
         userRepo.save(user1);
 
-        return "profile";
+        return user1;
     }
 
     @GetMapping("/profile")
-    public String viewProfile() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
-        System.out.println(currentPrincipalName);
-        return "profile";
-    }
-
-    @GetMapping("/edit_profile")
-    public String editProfile(Model model) {
-        model.addAttribute("user", new User());
-        return "editProfile";
+    public User viewProfile() {
+        return getUser();
     }
 
     @PostMapping("/addAudio")
     public String addAudio(@RequestBody Audio audio) {
-
             audioRepository.save(audio);
-
-            return "register_succ";
+            return "Added Audio Successfully!";
     }
 
     @PostMapping("/addMessage")
     public String addMessage(@RequestBody Message message) {
-
         messageRepository.save(message);
-
-        return "register_succ";
+        return "Added Message Successfully!";
     }
 
-    @ResponseBody
     @GetMapping("/getPurifierState")
     public Purifier getPurifierState(){
         return getPurifier();
     }
 
-    @ResponseBody
     @PutMapping("/triggerAlarmAndMessage")
     public String triggerAlarmAndMessage(){
         User user = getUser();
@@ -230,7 +170,7 @@ public class DemoApplication {
         purifier.setAudio_id(2);
         purifier.setMessage_id(2);
         purifierRepository.save(purifier);
-        return "Trigger succesful!";
+        return "Trigger successful!";
     }
 
     public User getUser(){
@@ -258,9 +198,8 @@ public class DemoApplication {
     public Purifier getPurifierNoSchedule(){
         User user = getUser();
         return purifierRepository.findById(user.getPurifier_id());
-
     }
-    @ResponseBody
+
     @DeleteMapping("/deletePurifiers")
     public String deletePurifiers(){
         purifierRepository.deleteAll();
@@ -273,35 +212,31 @@ public class DemoApplication {
 
         return "register_succ";
     }
-    @ResponseBody
+
     @PutMapping("/pickOffSchedule")
     public String pickOffSchedule(){
         pickSchedule(2);
         return "Your purifier is off!";
     }
 
-    @ResponseBody
     @PutMapping("/pickOnSchedule")
     public String pickOnSchedule(){
         pickSchedule(1);
         return "Your purifier is on!";
     }
 
-    @ResponseBody
     @PutMapping("/pickDaySchedule")
     public String pickDaySchedule(){
         pickSchedule(4);
         return "Your purifier is on day schedule (7:00 - 19:00)!";
     }
 
-    @ResponseBody
     @PutMapping("/pickNightSchedule")
     public String pickNightSchedule(){
         pickSchedule(3);
         return "Your purifier is on night schedule (19:00 - 7:00)!";
     }
 
-    @ResponseBody
     @PutMapping("/editPurifier")
     public String editPurifier(@RequestBody Purifier purifier){
         Purifier purifier2 = getPurifier();
@@ -312,7 +247,6 @@ public class DemoApplication {
         return "edit Purifier success!";
     }
 
-    @ResponseBody
     @PutMapping("/turnOnLightsGame")
     public String turnOnLightsGame(){
         String color = Service.colorGame();
@@ -324,7 +258,7 @@ public class DemoApplication {
             System.out.println("Purifier lights game on!" + color);
             color = Service.colorGame();
         }
-        return "Purifier lights game on!" + color;
+        return "Purifier lights game on!";
     }
 
     public Boolean checkSchedule(Purifier purifier){
@@ -358,5 +292,5 @@ public class DemoApplication {
 
 
 
-// http://localhost:8080/hello
+// http://localhost:8080/swagger-ui.html
             
