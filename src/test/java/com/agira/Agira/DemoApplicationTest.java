@@ -2,11 +2,9 @@ package com.agira.Agira;
 
 import com.agira.Agira.Entities.*;
 import com.agira.Agira.Repositories.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -24,14 +21,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-
 import javax.sql.DataSource;
-
 import java.sql.Date;
 import java.sql.Time;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -55,7 +47,7 @@ class DemoApplicationTest {
         String encodedPassword = passwordEncoder.encode("123456");
         user.setPassword(encodedPassword);
         user.setDate_of_birth(new Date(2000));
-        user.setAfflictions("diabet");
+        user.setAfflictions("difterie");
         user.setPurifier_id(12);
 
         user2 = new User();
@@ -114,7 +106,7 @@ class DemoApplicationTest {
 
         Message message = new Message();
         message.setMessage_id(1);
-        message.setMessage_text("nivel periculos");
+        message.setMessage_text("Nivel normal CO");
 
 
         when(userRepo.findByUsername("radu6")).thenReturn(user);
@@ -346,4 +338,27 @@ class DemoApplicationTest {
     }
 
 
+    @Test
+    @WithMockUser(username = "radu6", password = "123456")
+    void triggerAlarmAndMessage() throws Exception {
+        setup();
+        demoApplication.triggerAlarmAndMessage(10, 20, 30, 60);
+        assertEquals(1, purifier.getAudio_id());
+        assertEquals(8, purifier.getMessage_id());
+    }
+
+    @Test
+    @WithMockUser(username = "radu6", password = "123456")
+    void addStatistics() {
+        setup();
+        Statistics s = new Statistics();
+        s.setCo("20");
+        s.setNo2("10");
+        s.setOzone("15");
+        s.setSo2("40");
+        s.setPurifier_id(12);
+        s.setTimestamp(new Time(100));
+        demoApplication.addStatistics(s);
+        verify(statisticsRepository).save(s);
+    }
 }
