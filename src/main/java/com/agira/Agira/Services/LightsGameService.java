@@ -1,9 +1,8 @@
 package com.agira.Agira.Services;
 
-import java.util.Calendar;
 import java.util.Random;
 
-public class Service {
+public class LightsGameService {
 
     static public String  colorGame()
     {

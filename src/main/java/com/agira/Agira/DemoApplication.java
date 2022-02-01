@@ -1,12 +1,10 @@
 
 package com.agira.Agira;
 import com.agira.Agira.Entities.*;
-//import org.json.simple.JSONObject;
 import com.agira.Agira.Repositories.*;
 import com.agira.Agira.Services.ApiService;
-import com.agira.Agira.Services.Service;
+import com.agira.Agira.Services.LightsGameService;
 import org.eclipse.paho.client.mqttv3.*;
-//import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
 import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
 import java.sql.*;
@@ -25,9 +22,6 @@ import java.util.List;
 @SpringBootApplication
 @RestController
 @EnableSwagger2
-//@ApiOperation(value = "Update registration detail",
-//        authorizations = { @Authorization(value="basicAuth") })
-//@SecurityScheme(name = "agira", scheme = "basic", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 public class DemoApplication {
     public static void main(String[] args) throws SQLException {
 
@@ -41,16 +35,12 @@ public class DemoApplication {
             int responseCode = conn.getResponseCode();
 
             if (responseCode != 200) {
-                throw new RuntimeException("HttpResponseCode: " + responseCode);
+                throw new RuntimeException("Api Connection HttpResponseCode: " + responseCode);
             }
-            else {
-                String informationString = ApiService.ReadData(url);
-                ApiService.PrettyPrintJson(informationString);
-                ApiService.GetParameter("london", "co");
-                ApiService.GetParameter("london", "no2");
-                ApiService.GetParameter("london", "o3");
-                ApiService.GetParameter("london", "so2");
-            }
+//            else {
+//                String informationString = ApiService.ReadData(url);
+//                ApiService.PrettyPrintJson(informationString);
+//            }
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -130,8 +120,8 @@ public class DemoApplication {
 
     @PostMapping("/addAudio")
     public String addAudio(@RequestBody Audio audio) {
-            audioRepository.save(audio);
-            return "Added Audio Successfully!";
+        audioRepository.save(audio);
+        return "Added Audio Successfully!";
     }
 
     @PostMapping("/addMessage")
@@ -145,11 +135,10 @@ public class DemoApplication {
         return getPurifier();
     }
 
-    @PutMapping("/triggerAlarmAndMessage")
-    public String triggerAlarmAndMessage(){
+    public int valuesLimits()
+    {
         User user = getUser();
         int limit = 30;
-        Purifier purifier = getPurifier();
         if(user.getAfflictions().contains("astm")){
             limit = 40;
         }
@@ -162,15 +151,59 @@ public class DemoApplication {
         if(user.getAfflictions().contains("bronsita")){
             limit = 40;
         }
-        purifier.setAudio_id(2);
-        purifier.setMessage_id(2);
+        return limit;
+    }
+
+    //@PutMapping("/triggerAlarmAndMessage")
+    public void triggerAlarmAndMessage(float co, float no2, float o3, float so2){
+        int limit = valuesLimits();
+        Purifier purifier = getPurifierNoSchedule();
+        if (co < limit)
+        {
+            purifier.setMessage_id(1);
+        }
+        else
+        {
+            purifier.setAudio_id(1);
+            purifier.setMessage_id(5);
+        }
+        if (no2 < limit)
+        {
+            purifier.setMessage_id(2);
+        }
+        else
+        {
+            purifier.setAudio_id(1);
+            purifier.setMessage_id(6);
+        }
+        if (o3 < limit)
+        {
+            purifier.setMessage_id(3);
+        }
+        else
+        {
+            purifier.setAudio_id(1);
+            purifier.setMessage_id(7);
+        }
+        if (so2 < limit)
+        {
+            purifier.setMessage_id(4);
+        }
+        else
+        {
+            purifier.setAudio_id(1);
+            purifier.setMessage_id(8);
+        }
+
         purifierRepository.save(purifier);
-        return "Trigger successful!";
+        //return "Trigger successful!";
     }
 
     public User getUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
+        System.out.println(currentPrincipalName);
+        System.out.println(userRepo.findByUsername(currentPrincipalName));
         return userRepo.findByUsername(currentPrincipalName);
     }
 
@@ -240,14 +273,14 @@ public class DemoApplication {
 
     @PutMapping("/turnOnLightsGame")
     public String turnOnLightsGame(){
-        String color = Service.colorGame();
+        String color = LightsGameService.colorGame();
         Purifier purifier = getPurifierNoSchedule();
         for (int i = 0 ; i < 10; i ++)
         {
             purifier.setHex(color);
             purifierRepository.save(purifier);
             System.out.println("Purifier lights game on!" + color);
-            color = Service.colorGame();
+            color = LightsGameService.colorGame();
         }
         return "Purifier lights game on!";
     }
@@ -286,11 +319,11 @@ public class DemoApplication {
         // get parameters values from Air Quality Api
         Purifier purifier = getPurifierNoSchedule();
         String city = purifier.getLocation_name();
-        String co = "CO: " + ApiService.GetParameter(city, "co") + " ;\n";
-        String no2 = "NO2: " + ApiService.GetParameter(city, "no2") + " ;\n";
-        String o3 = "Ozone: " + ApiService.GetParameter(city, "o3") + " ;\n";
-        String so2 = "SO2: " + ApiService.GetParameter(city, "so2") + " ;\n";
-        String msg = co + no2 + o3 + so2;
+        String co = ApiService.GetParameter(city, "co");
+        String no2 =ApiService.GetParameter(city, "no2");
+        String o3 =ApiService.GetParameter(city, "o3");
+        String so2 = ApiService.GetParameter(city, "so2") ;
+        String msg = "CO: " + co + "; \n" + "NO2: " + no2 + "; \n" + "O3: " + o3 + "\n" + "SO2: " + so2 + "; \n";
 
         // Mqtt connection
         String broker = "tcp://localhost:1883";
@@ -318,6 +351,8 @@ public class DemoApplication {
         statistics.setTimestamp(new Time(System.currentTimeMillis()));
         addStatistics(statistics);
 
+        //Check param values to notify the user if the value is above average
+        triggerAlarmAndMessage(Float.parseFloat(co), Float.parseFloat(no2), Float.parseFloat(o3), Float.parseFloat(so2));
         return msg;
     }
 
