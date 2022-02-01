@@ -119,8 +119,8 @@ public class DemoApplication {
 
     @PostMapping("/addAudio")
     public String addAudio(@RequestBody Audio audio) {
-            audioRepository.save(audio);
-            return "Added Audio Successfully!";
+        audioRepository.save(audio);
+        return "Added Audio Successfully!";
     }
 
     @PostMapping("/addMessage")
@@ -154,9 +154,9 @@ public class DemoApplication {
     }
 
     //@PutMapping("/triggerAlarmAndMessage")
-    public void triggerAlarmAndMessage(int co, int no2, int o3, int so2){
+    public void triggerAlarmAndMessage(float co, float no2, float o3, float so2){
         int limit = valuesLimits();
-        Purifier purifier = getPurifier();
+        Purifier purifier = getPurifierNoSchedule();
         if (co < limit)
         {
             purifier.setMessage_id(1);
@@ -201,7 +201,7 @@ public class DemoApplication {
     public User getUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
-        System.out.println(currentPrincipalName + "!!!!!");
+        System.out.println(currentPrincipalName);
         System.out.println(userRepo.findByUsername(currentPrincipalName));
         return userRepo.findByUsername(currentPrincipalName);
     }
@@ -319,11 +319,11 @@ public class DemoApplication {
         // get parameters values from Air Quality Api
         Purifier purifier = getPurifierNoSchedule();
         String city = purifier.getLocation_name();
-        String co = "CO: " + ApiService.GetParameter(city, "co") + " ;\n";
-        String no2 = "NO2: " + ApiService.GetParameter(city, "no2") + " ;\n";
-        String o3 = "Ozone: " + ApiService.GetParameter(city, "o3") + " ;\n";
-        String so2 = "SO2: " + ApiService.GetParameter(city, "so2") + " ;\n";
-        String msg = co + no2 + o3 + so2;
+        String co = ApiService.GetParameter(city, "co");
+        String no2 =ApiService.GetParameter(city, "no2");
+        String o3 =ApiService.GetParameter(city, "o3");
+        String so2 = ApiService.GetParameter(city, "so2") ;
+        String msg = "CO: " + co + "; \n" + "NO2: " + no2 + "; \n" + "O3: " + o3 + "\n" + "SO2: " + so2 + "; \n";
 
         // Mqtt connection
         String broker = "tcp://localhost:1883";
@@ -352,7 +352,7 @@ public class DemoApplication {
         addStatistics(statistics);
 
         //Check param values to notify the user if the value is above average
-        triggerAlarmAndMessage(Integer.parseInt(co), Integer.parseInt(no2), Integer.parseInt(o3), Integer.parseInt(so2));
+        triggerAlarmAndMessage(Float.parseFloat(co), Float.parseFloat(no2), Float.parseFloat(o3), Float.parseFloat(so2));
         return msg;
     }
 
