@@ -202,8 +202,6 @@ public class DemoApplication {
     public User getUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
-        System.out.println(currentPrincipalName);
-        System.out.println(userRepo.findByUsername(currentPrincipalName));
         return userRepo.findByUsername(currentPrincipalName);
     }
 
