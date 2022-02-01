@@ -1,7 +1,5 @@
 package com.agira.Agira.Configs;
-
 import javax.sql.DataSource;
-
 import com.agira.Agira.Services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
