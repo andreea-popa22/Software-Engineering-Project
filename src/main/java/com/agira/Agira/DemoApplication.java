@@ -36,10 +36,10 @@ public class DemoApplication {
             if (responseCode != 200) {
                 throw new RuntimeException("Api Connection HttpResponseCode: " + responseCode);
             }
-            else {
-                String informationString = ApiService.ReadData(url);
-                ApiService.PrettyPrintJson(informationString);
-            }
+//            else {
+//                String informationString = ApiService.ReadData(url);
+//                ApiService.PrettyPrintJson(informationString);
+//            }
         }
         catch (Exception e) {
             e.printStackTrace();
