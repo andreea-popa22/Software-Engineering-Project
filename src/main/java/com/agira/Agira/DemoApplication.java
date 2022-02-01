@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 //import org.json.simple.JSONObject;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.configurationprocessor.json.*;
 //import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -63,6 +65,7 @@ public class DemoApplication {
         }
 
     }
+
 
     @Autowired
     private UserRepository userRepo;
@@ -233,6 +236,8 @@ public class DemoApplication {
     public User getUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
+        System.out.println(currentPrincipalName + "!!!!!");
+        System.out.println(userRepo.findByUsername(currentPrincipalName));
         return userRepo.findByUsername(currentPrincipalName);
     }
 
@@ -252,7 +257,6 @@ public class DemoApplication {
 
     public Purifier getPurifierNoSchedule(){
         User user = getUser();
-        Boolean is_on;
         return purifierRepository.findById(user.getPurifier_id());
 
     }
@@ -344,6 +348,7 @@ public class DemoApplication {
     }
 
     public void pickSchedule(int id){
+        System.out.println("goood");
         Purifier purifier = getPurifierNoSchedule();
         purifier.setSchedule_id(id);
         purifierRepository.save(purifier);
