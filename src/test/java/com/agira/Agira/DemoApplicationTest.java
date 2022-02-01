@@ -62,13 +62,9 @@ import static org.mockito.Mockito.when;
 @WebMvcTest(value = DemoApplication.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
 class DemoApplicationTest {
 
-    private User user;
-    private Purifier purifier;
-    private Schedule schedule1;
-
     @Before
     public void setup() {
-        user = new User();
+        User user = new User();
         user.setUsername("radu6");
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode("123456");
@@ -77,7 +73,7 @@ class DemoApplicationTest {
         user.setAfflictions("diabet");
         user.setPurifier_id(12);
 
-        purifier = new Purifier();
+        Purifier purifier = new Purifier();
         purifier.setPurifier_id(12);
         purifier.setAudio_id(2);
         purifier.setHex("#d8f05a");
@@ -86,14 +82,40 @@ class DemoApplicationTest {
         purifier.setMessage_id(2);
         purifier.setSchedule_id(1);
 
-        schedule1 = new Schedule();
+        Schedule schedule1 = new Schedule();
         schedule1.setSchedule_id(1);
         schedule1.setEnd_time(new Time(23, 59, 59));
         schedule1.setStart_time(new Time(0, 0, 1));
+        Schedule schedule2 = new Schedule();
+        schedule2.setSchedule_id(2);
+        schedule2.setEnd_time(new Time(0, 0, 0));
+        schedule2.setStart_time(new Time(0, 0, 0));
+        Schedule schedule3 = new Schedule();
+        schedule3.setSchedule_id(3);
+        schedule3.setEnd_time(new Time(7, 0, 0));
+        schedule3.setStart_time(new Time(19, 0, 0));
+        Schedule schedule4 = new Schedule();
+        schedule4.setSchedule_id(4);
+        schedule4.setEnd_time(new Time(19, 0, 0));
+        schedule4.setStart_time(new Time(7, 0, 0));
+
+        Audio audio = new Audio();
+        audio.setAudio_id(1);
+        audio.setAudio_file("a1.mp3");
+
+        Message message = new Message();
+        message.setMessage_id(1);
+        message.setMessage_text("nivel periculos");
+
 
         when(userRepo.findByUsername("radu6")).thenReturn(user);
         when(purifierRepository.findById(12)).thenReturn(purifier);
         when(scheduleRepository.findById(1)).thenReturn(schedule1);
+        when(scheduleRepository.findById(2)).thenReturn(schedule2);
+        when(scheduleRepository.findById(3)).thenReturn(schedule3);
+        when(scheduleRepository.findById(4)).thenReturn(schedule4);
+        when(audioRepository.findById(1)).thenReturn(audio);
+        when(messageRepository.findById(1)).thenReturn(message);
     }
 
 
