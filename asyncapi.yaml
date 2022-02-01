@@ -1,0 +1,79 @@
+asyncapi: '2.3.0'
+info:
+  title: Smart Purifier API
+  version: '1.0.0'
+  description: |
+    The Smart Purifier API allows you
+    to remotely manage the purifier.
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
+
+servers:
+  mosquitto:
+    url: mqtt://localhost:1883
+    protocol: mqtt
+
+channels:
+  airQuality.{purifierId}.parameters:
+    description: The topic on which measured values may be produced and consumed.
+    parameters:
+      purifierId:
+        $ref: '#/components/parameters/purifierId'
+    publish:
+      summary: Inform about air quality conditions of the city where the purifier is located.
+      operationId: receiveAirQualityParam
+      message:
+        $ref: '#/components/messages/airQualityParam'
+  airQuality.{purifierId}.notif:
+    parameters:
+      purifierId:
+        $ref: '#/components/parameters/purifierId'
+    subscribe:
+      operationId: notif
+      message:
+        $ref: '#/components/messages/notif'
+
+components:
+  messages:
+    airQualityParam:
+      name: airQualityParam
+      title: Air Quality Parameters
+      summary: Inform about air quality conditions of the city where the purifier is located.
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/airQualityParamPayload"
+    notif:
+      name: notif
+      title: Notify user
+      summary: Command a particular purifier to notify the user that the air quality parameters are above average.
+      payload:
+        $ref: "#/components/schemas/notifPayload"
+
+  schemas:
+    airQualityParamPayload:
+      type: object
+      properties:
+        params:
+          type: string
+          description: CO, NO2, O3, SO2.
+        sentAt:
+          $ref: "#/components/schemas/sentAt"
+    notifPayload:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Notify user when the parameters are above average.
+        sentAt:
+          $ref: "#/components/schemas/sentAt"
+    sentAt:
+      type: string
+      format: date-time
+      description: Date and time when the message was sent.
+
+  parameters:
+    purifierId:
+      description: The ID of the purifier.
+      schema:
+        type: string
