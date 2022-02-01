@@ -338,9 +338,9 @@ public class DemoApplication {
         Purifier purifier = getPurifierNoSchedule();
         String city = purifier.getLocation_name();
         String co = "CO: " + ApiService.GetParameter(city, "co") + " ;\n";
-        String no2 = "Dust: " + ApiService.GetParameter(city, "no2") + " ;\n";
+        String no2 = "NO2: " + ApiService.GetParameter(city, "no2") + " ;\n";
         String o3 = "Ozone: " + ApiService.GetParameter(city, "o3") + " ;\n";
-        String so2 = "Humidity: " + ApiService.GetParameter(city, "so2") + " ;\n";
+        String so2 = "SO2: " + ApiService.GetParameter(city, "so2") + " ;\n";
         String msg = co + no2 + o3 + so2;
 
         // Mqtt connection
@@ -363,9 +363,9 @@ public class DemoApplication {
         // Create statistics object to save in database
         Statistics statistics = new Statistics();
         statistics.setCo(co);
-        statistics.setDust(no2);
+        statistics.setNo2(no2);
         statistics.setOzone(so2);
-        statistics.setHumidity(so2);
+        statistics.setSo2(so2);
         statistics.setTimestamp(new Time(System.currentTimeMillis()));
         addStatistics(statistics);
 
@@ -405,8 +405,4 @@ public class DemoApplication {
     }
 
 }
-
-
-
-// http://localhost:8080/hello
             

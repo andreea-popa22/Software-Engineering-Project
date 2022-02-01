@@ -20,14 +20,14 @@ public class Statistics {
     @Column(name = "co")
     private String co;
 
-    @Column(name = "dust")
-    private String dust;
+    @Column(name = "no2")
+    private String no2;
 
     @Column(name = "ozone")
     private String ozone;
 
-    @Column(name = "humidity")
-    private String humidity;
+    @Column(name = "so2")
+    private String so2;
 
     public int getStatistic_id() {
         return statistic_id;
@@ -61,12 +61,12 @@ public class Statistics {
         this.co = co;
     }
 
-    public String getDust() {
-        return dust;
+    public String getNo2() {
+        return no2;
     }
 
-    public void setDust(String dust) {
-        this.dust = dust;
+    public void setNo2(String no2) {
+        this.no2 = no2;
     }
 
     public String getOzone() {
@@ -77,11 +77,11 @@ public class Statistics {
         this.ozone = ozone;
     }
 
-    public String getHumidity() {
-        return humidity;
+    public String getSo2() {
+        return so2;
     }
 
-    public void setHumidity(String humidity) {
-        this.humidity = humidity;
+    public void setSo2(String so2) {
+        this.so2 = so2;
     }
 }
