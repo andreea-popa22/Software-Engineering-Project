@@ -34,7 +34,7 @@ Pentru verificarea configurației, într-un CMD se poate introduce următoarea c
 ## Utilizare
 Trebuie deschis urmatorul link: [Swagger](http://localhost:8080/swagger-ui.html#/demo-application).
 Înainte de trimiterea request-urilor va apărea un pop-ul în care utilizatorul va trebui să introducă un username și o parolă. Pentru testare se poate folosi următorul mock user:
-username **admin** și password **123456**.
+username **admin1** și password **123456**.
 Dacă purificatorul utilizatorului nu este pornit, alte request-uri nu vor funcționa, așa că va trebui trimis request-ul _/pickOnSchedule_.
 Apoi se pot trimite celelalte request-uri.
 
