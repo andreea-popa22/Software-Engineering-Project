@@ -4,12 +4,14 @@ Acest proiect este realizat in cadrul cursului de Inginerie Software, impreuna c
 
 In cadrul lui vom dezvolta partea de back-end a unui purificator smart ce are urmatoarele functionalitati:
 
-- detectarea nivelului de CO/SO2/NO2/O3 
-- afișarea unor notificări
-- crearea unei atmosfere plăcute prin jocuri de lumini
-- pornirea automată pe baza unui program stabilit
-- crearea unor moduri speciale
+- înregistrare si logare în aplicație
+- crearea unui profil al utilizatorului (va răspunde la diverse întrebări: vârstă, sex, oraș, afecțiuni, program de funcționare al device-ului)
+- crearea de moduri speciale 
+- integrare de API pentru fum, nivel CO, NO2, SO2, O3
+- jocuri de lumini
+- notificari privind depasirea valorilor medii (personalizate in functie de afectiuni)
 - pornirea unor alarme în cazul depășirii anumitor parametri
+- pornirea automată pe baza unui program stabilit
 
 Implementarea proiectului se va realiza in Java.
 
