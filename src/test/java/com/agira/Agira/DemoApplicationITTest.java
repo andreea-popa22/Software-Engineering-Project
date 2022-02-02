@@ -2,6 +2,7 @@ package com.agira.Agira;
 
 import com.agira.Agira.Entities.*;
 import com.agira.Agira.Repositories.*;
+import com.agira.Agira.Services.ApiService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -169,5 +170,11 @@ public class DemoApplicationITTest {
         json = json.replaceAll("_on", "is_on");
         Purifier purifierResult = new ObjectMapper().readValue(json, Purifier.class);
         assertEquals(purifierRepository.findById(1), purifierResult);
+
+        //Statistics
+        request = MockMvcRequestBuilders.get("/statistics");
+        result = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
+        json = result.getResponse().getContentAsString();
+        System.out.println(json);
     }
 }
