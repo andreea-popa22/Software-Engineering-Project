@@ -37,7 +37,6 @@ class DemoApplicationTest {
     private Purifier purifier;
     private User user;
     private User user2;
-    private Purifier purifier3;
 
     @Before
     public void setup() {
@@ -66,7 +65,7 @@ class DemoApplicationTest {
         purifier.setMessage_id(2);
         purifier.setSchedule_id(1);
 
-        purifier3 = new Purifier();
+        Purifier purifier3 = new Purifier();
         purifier3.setPurifier_id(13);
         purifier3.setAudio_id(1);
         purifier3.setHex("#d8f12");
@@ -320,7 +319,7 @@ class DemoApplicationTest {
         MvcResult result = mvc.perform(request).andReturn();
         String json = result.getResponse().getContentAsString();
         User u = new ObjectMapper().readValue(json, User.class);
-        assertEquals(user2, u);
+        assertEquals(user2.getAfflictions(), u.getAfflictions());
     }
 
 

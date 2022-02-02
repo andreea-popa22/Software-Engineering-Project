@@ -69,7 +69,9 @@ public class DemoApplication {
 
     @PostMapping("/process_register")
     public User processRegister(@RequestBody User user) {
-        System.out.println(user.getUsername());
+        if(purifierRepository.findById(user.getPurifier_id()) == null){
+            return null;
+        }
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
@@ -91,21 +93,8 @@ public class DemoApplication {
 
     @PostMapping("/process_edit_profile")
     public User processEditProfile(@RequestBody User user) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
-        User user1 = userRepo.findByUsername(currentPrincipalName);
-        if(user.getPassword() != null) {
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String encodedPassword = passwordEncoder.encode(user.getPassword());
-            user1.setPassword(encodedPassword);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        User user1 = getUser();
 
-        user1.setUsername(user.getUsername());
         user1.setDate_of_birth(user.getDate_of_birth());
         user1.setAfflictions(user.getAfflictions());
         userRepo.save(user1);
@@ -271,6 +260,9 @@ public class DemoApplication {
 
     @PutMapping("/turnOnLightsGame")
     public String turnOnLightsGame(){
+        if(!getPurifierNoSchedule().is_on()){
+            return null;
+        }
         String color = LightsGameService.colorGame();
         Purifier purifier = getPurifierNoSchedule();
         for (int i = 0 ; i < 10; i ++)
@@ -314,6 +306,9 @@ public class DemoApplication {
     @ResponseBody
     @GetMapping("/statistics")
     public String publishTopic() throws MqttException {
+        if(!getPurifier().is_on()){
+            return null;
+        }
         // get parameters values from Air Quality Api
         Purifier purifier = getPurifierNoSchedule();
         String city = purifier.getLocation_name();
