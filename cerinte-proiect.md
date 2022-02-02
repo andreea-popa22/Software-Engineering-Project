@@ -6,12 +6,14 @@
 
 3.  Aplicatia sa aiba minim 5 functionalitati:
 
--  înregistrare si logare în aplicație
+- înregistrare si logare în aplicație
 - crearea unui profil al utilizatorului (va răspunde la diverse întrebări: vârstă, sex, oraș, afecțiuni, program de funcționare al device-ului)
 - crearea de moduri speciale 
 - integrare de API pentru fum, nivel CO, NO2, SO2, O3
 - jocuri de lumini
 - notificari privind depasirea valorilor medii (personalizate in functie de afectiuni)
+- pornirea unor alarme în cazul depășirii anumitor parametri
+- pornirea automată pe baza unui program stabilit
 
 4. Tot proiectul intr-un repository
 
