@@ -37,5 +37,5 @@ DacÄƒ purificatorul utilizatorului nu este pornit, alte request-uri nu vor funcÈ
 Apoi se pot trimite celelalte request-uri.
 
 ## Testare
-Pentru testare s-a folosit
+Pentru testare s-a folosit.
 Avem unit tests si integration tests.
