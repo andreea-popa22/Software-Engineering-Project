@@ -17,7 +17,7 @@ Implementarea proiectului se va realiza in Java.
 Link catre documentul de analiza: https://docs.google.com/document/d/1zegxxW3Ma2Hy8idONQcIOMgB3yz-dOM4IdGJO5W8LvM/edit#
 
 ## Documentare
-Aplicatia expune un Rest **API HTTP** – documentat folosind Open API ([Swagger](http://localhost:8080/swagger-ui.html#/demo-application)) si un **API MQTT** – documentat folosind  ![AsyncAPI](asyncapi.yaml)
+Aplicatia expune un Rest **API HTTP** – documentat folosind Open API ([Swagger](http://localhost:8080/swagger-ui.html#/demo-application)) si un **API MQTT** – documentat folosind  [AsyncAPI](asyncapi.yaml)
 
 ## Instalare
 Ca sistem de build e folosit **Maven**
