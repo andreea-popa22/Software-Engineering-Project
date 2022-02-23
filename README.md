@@ -39,4 +39,4 @@ DacÄƒ purificatorul utilizatorului nu este pornit, alte request-uri nu vor funcÈ
 Apoi se pot trimite celelalte request-uri.
 
 ## Testare
-Avem unit tests si integration tests.
+Sunt implementate atat unit tests, cat si integration tests.
